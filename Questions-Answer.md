@@ -1,4 +1,4 @@
-Here are the answers based on your 5 years of experience as a DevOps Engineer:  
+
 
 ---
 
@@ -188,4 +188,4 @@ tar -czf "$backup_dir/logs_$(date +%F).tar.gz" /var/logs/*.log
 
 ---
 
-This should give you solid answers for an interview or discussion as a DevOps Engineer with 5 years of experience. Let me know if you need any refinements! 🚀
+
