@@ -1,0 +1,573 @@
+### **Disk Partition, Types, and Filesystems**  
+**Disk Partitioning** divides a disk into separate sections, each acting as an independent storage unit.  
+
+**Partition Types:**  
+- **Primary** – Bootable, max 4 partitions  
+- **Extended** – Holds logical partitions  
+- **Logical** – Inside an extended partition  
+
+**Filesystem Types:**  
+- **EXT4** – Default Linux filesystem  
+- **XFS** – High-performance, used in RHEL  
+- **Btrfs** – Supports snapshots  
+- **FAT32/NTFS** – Windows filesystems  
+- **NFS** – Network-based  
+
+Check existing partitions:  
+```bash
+lsblk
+fdisk -l
+```
+Check filesystem type:  
+```bash
+df -T
+```
+
+---
+
+### **1. Boot Process (Complete)**
+1. **BIOS/UEFI** – Loads the bootloader  
+2. **Bootloader (GRUB)** – Loads the kernel  
+3. **Kernel Initialization** – Mounts the root filesystem  
+4. **Init/Systemd** – Manages system services  
+5. **User Login** – System is ready  
+
+Check boot logs:  
+```bash
+journalctl -b
+dmesg | less
+```
+
+---
+
+### **2. SSH Troubleshooting**
+- Check SSH service:  
+  ```bash
+  systemctl status sshd
+  ```
+- Verify SSH port (default: `22`):  
+  ```bash
+  netstat -tulnp | grep ssh
+  ```
+- Check logs:  
+  ```bash
+  journalctl -u sshd --no-pager
+  tail -f /var/log/auth.log
+  ```
+- Restart SSH:  
+  ```bash
+  systemctl restart sshd
+  ```
+
+---
+
+### **3. Where Are SSH Keys Stored After Copying?**  
+SSH keys are stored in:  
+- **Private Key:** `~/.ssh/id_rsa`  
+- **Public Key:** `~/.ssh/id_rsa.pub`  
+- **Authorized Keys (Remote Machine):** `~/.ssh/authorized_keys`
+
+---
+
+### **4. Find Files of 12MB Size**  
+```bash
+find / -type f -size 12M
+```
+
+---
+
+### **5. Difference Between `ntpd` and `chronyd`**
+| Feature | `ntpd` | `chronyd` |
+|---------|--------|-----------|
+| Synchronization | Slow | Fast |
+| Network Requirement | Always connected | Works offline |
+| Use Case | Servers | Laptops, VMs |
+
+---
+
+### **6. What is NTP?**  
+NTP (Network Time Protocol) synchronizes system clocks over a network.  
+
+Check NTP sync:  
+```bash
+ntpq -p
+```
+
+---
+
+### **7. View Disk Usage**
+```bash
+df -h   # Disk space
+du -sh /path   # Folder size
+```
+
+---
+
+### **8. View Filesystem of a Block Device**
+```bash
+lsblk -f
+blkid
+```
+
+---
+
+### **9. Synchronize Time With Internet**
+```bash
+timedatectl set-ntp true
+```
+
+---
+
+### **10. Docker Architecture**
+- **Client** – CLI/API interaction  
+- **Daemon** – Runs containers  
+- **Images** – Pre-configured environments  
+- **Containers** – Running instances  
+- **Registry** – Stores images  
+
+---
+
+### **11. Create an Image for Docker Repository**
+```bash
+docker build -t myimage:v1 .
+docker tag myimage:v1 myrepo/myimage:v1
+docker push myrepo/myimage:v1
+```
+
+---
+
+### **12. Create a Docker Container**
+```bash
+docker run -d --name mycontainer myimage:v1
+```
+
+---
+
+### **13. Types of AWS Instances**
+- **General Purpose (t2, t3)** – Balanced workload  
+- **Compute Optimized (c5, c6g)** – High processing power  
+- **Memory Optimized (r5, x1)** – High RAM  
+- **Storage Optimized (i3, d2)** – Large data processing  
+- **GPU Instances (p3, g4)** – Graphics workloads  
+
+---
+
+### **14. AWS Services**
+- **Compute** – EC2, Lambda  
+- **Storage** – S3, EBS  
+- **Networking** – VPC, Route 53  
+- **Database** – RDS, DynamoDB  
+- **Security** – IAM, WAF  
+
+---
+
+### **15. What is EC2?**  
+Elastic Compute Cloud (EC2) provides scalable virtual servers in AWS.
+
+---
+
+### **16. What is `cgroup`?**  
+Control Groups (`cgroup`) manage resource allocation for processes and containers.
+
+---
+
+### **17. Ansible Architecture**
+- **Control Node** – Runs Ansible  
+- **Managed Nodes** – Systems being configured  
+- **Inventory** – List of hosts  
+- **Modules** – Execute tasks  
+- **Playbooks** – YAML scripts  
+
+---
+
+### **18. Install a Package Using Ansible**
+```yaml
+- name: Install a package
+  yum:
+    name: httpd
+    state: present
+```
+
+---
+
+### **19. Ansible Modules**
+- **File Management:** `file`, `copy`, `fetch`
+- **System:** `service`, `cron`, `user`
+- **Networking:** `uri`, `firewalld`
+- **Cloud:** `ec2_instance`, `azure_rm`
+
+---
+
+### **20. Privileged Escalation**
+Allows running tasks as root using `become: yes`.
+
+```yaml
+- name: Install package as root
+  become: yes
+  yum:
+    name: nginx
+    state: present
+```
+
+---
+
+### **21. Import vs Include Tasks**
+- **Include:** Dynamically loads tasks  
+- **Import:** Statically includes tasks  
+
+---
+
+### **22. What Are Ansible Roles?**  
+A structured way to organize Ansible playbooks with tasks, handlers, templates, and variables.
+
+---
+
+### **23. What is Ansible Galaxy?**  
+A repository of reusable Ansible roles.
+
+---
+
+### **24. Ansible Directory Structure**
+```
+roles/
+  myrole/
+    tasks/
+    handlers/
+    templates/
+    vars/
+    defaults/
+```
+
+---
+
+### **25. Variables and Templates in Ansible**
+- **Variables (`vars/`)** – Store custom configurations  
+- **Templates (`templates/`)** – Jinja2 files used for dynamic file generation  
+
+---
+
+### **26. Types of Ansible Variables**
+- **Playbook Variables**
+- **Inventory Variables**
+- **Role Variables**
+- **Magic Variables**
+
+---
+
+### **27. What Are Magic Variables?**
+Built-in variables like `inventory_hostname`, `ansible_os_family`.
+
+---
+
+### **28. What is a Handler?**
+Handlers are triggered only when notified by a task.
+
+---
+
+### **29. Notify Statement in Ansible**
+Used to call a handler when a task changes.
+
+```yaml
+- name: Restart service
+  service:
+    name: httpd
+    state: restarted
+  notify: Restart Apache
+```
+I'll explain all the topics in detail, providing clear explanations, commands, and examples relevant to a **DevOps Engineer with 5 years of experience**.  
+
+---
+
+## **1. Disk Partitioning, Types, and Filesystems**
+### **Disk Partitioning**
+Partitioning divides a disk into separate sections, allowing multiple filesystems on a single disk. The primary tool for partitioning is `fdisk` or `parted`.
+
+### **Partition Types:**
+1. **Primary Partition** – A disk can have up to **4 primary partitions**.
+2. **Extended Partition** – Allows creating more than 4 partitions by acting as a container.
+3. **Logical Partition** – Subdivisions inside an extended partition.
+
+### **Filesystem Types**
+1. **EXT4** – Default filesystem in Linux.
+2. **XFS** – Used in **RedHat/CentOS** for high performance.
+3. **Btrfs** – Supports snapshots and pooling.
+4. **FAT32/NTFS** – Used in Windows.
+5. **NFS (Network File System)** – Used for remote storage.
+
+### **Check Existing Partitions:**
+```bash
+lsblk
+fdisk -l
+blkid
+```
+### **Check Filesystem Type:**
+```bash
+df -T
+```
+
+---
+
+## **2. Linux Boot Process**
+The Linux boot process involves **5 key stages:**
+1. **BIOS/UEFI** – Firmware initializes hardware.
+2. **Bootloader (GRUB)** – Loads kernel.
+3. **Kernel Initialization** – Loads drivers and mounts the root filesystem.
+4. **Init/Systemd** – Starts system services.
+5. **User Login** – The system is ready for use.
+
+Check boot logs:
+```bash
+journalctl -b
+dmesg | less
+```
+
+---
+
+## **3. SSH Troubleshooting**
+### **Check SSH Service**
+```bash
+systemctl status sshd
+journalctl -u sshd --no-pager
+```
+### **Verify SSH Port**
+```bash
+netstat -tulnp | grep ssh
+ss -tulnp | grep ssh
+```
+### **Restart SSH**
+```bash
+systemctl restart sshd
+```
+### **Check SSH Logs**
+```bash
+tail -f /var/log/auth.log
+```
+
+---
+
+## **4. Find Files of 12MB Size**
+```bash
+find / -type f -size 12M
+```
+
+---
+
+## **5. Difference Between `ntpd` and `chronyd`**
+| Feature | `ntpd` | `chronyd` |
+|---------|--------|-----------|
+| Synchronization | Slow | Fast |
+| Network Requirement | Always connected | Works offline |
+| Use Case | Servers | Laptops, VMs |
+
+### **Check NTP Sync**
+```bash
+ntpq -p
+chronyc tracking
+```
+
+---
+
+## **6. Disk Usage Monitoring**
+```bash
+df -h   # Check disk space
+du -sh /var/log   # Check folder size
+```
+
+---
+
+## **7. View Filesystem of a Block Device**
+```bash
+lsblk -f
+blkid
+df -T
+```
+
+---
+
+## **8. Synchronize Time With Internet**
+```bash
+timedatectl set-ntp true
+```
+
+---
+
+## **9. Docker Architecture**
+### **Key Components:**
+1. **Docker Client** – CLI to interact with Docker.
+2. **Docker Daemon** – Runs containers.
+3. **Docker Image** – Pre-configured environment.
+4. **Docker Container** – Running instance of an image.
+5. **Docker Registry** – Stores images.
+
+---
+
+## **10. Create a Docker Image and Push to Repository**
+```bash
+docker build -t myimage:v1 .
+docker tag myimage:v1 myrepo/myimage:v1
+docker push myrepo/myimage:v1
+```
+
+---
+
+## **11. Run a Docker Container**
+```bash
+docker run -d --name mycontainer myimage:v1
+docker ps  # Check running containers
+```
+
+---
+
+## **12. AWS EC2 and Instance Types**
+### **Types of AWS EC2 Instances:**
+1. **General Purpose** – Balanced CPU & RAM (e.g., `t2.micro`).
+2. **Compute Optimized** – High processing power (`c5.large`).
+3. **Memory Optimized** – High RAM (`r5.large`).
+4. **Storage Optimized** – Large storage (`i3.large`).
+5. **GPU Instances** – For ML workloads (`p3.large`).
+
+---
+
+## **13. Ansible Architecture**
+### **Key Components:**
+- **Control Node** – Runs Ansible.
+- **Managed Nodes** – Systems being configured.
+- **Inventory** – List of hosts.
+- **Modules** – Execute tasks.
+- **Playbooks** – YAML scripts defining tasks.
+
+---
+
+## **14. Install a Package Using Ansible**
+```yaml
+- name: Install Apache
+  hosts: web_servers
+  become: yes
+  tasks:
+    - name: Install httpd
+      yum:
+        name: httpd
+        state: present
+```
+
+---
+
+## **15. Ansible Modules**
+### **Common Modules:**
+- **System Modules:** `service`, `cron`, `user`
+- **File Modules:** `file`, `copy`, `fetch`
+- **Networking Modules:** `uri`, `firewalld`
+- **Cloud Modules:** `ec2_instance`, `azure_rm`
+
+---
+
+## **16. Privileged Escalation in Ansible**
+Allows running tasks as root using `become: yes`.
+```yaml
+- name: Install package as root
+  become: yes
+  yum:
+    name: nginx
+    state: present
+```
+
+---
+
+## **17. Ansible Roles & Directory Structure**
+```bash
+roles/
+  myrole/
+    tasks/
+    handlers/
+    templates/
+    vars/
+    defaults/
+```
+
+---
+
+## **18. Difference Between `du` and `df`**
+| Command | Purpose |
+|---------|---------|
+| `df -h` | Shows disk space usage |
+| `du -sh /var/log` | Shows folder size |
+
+---
+
+## **19. Kubernetes vs OpenShift**
+| Feature | Kubernetes | OpenShift |
+|---------|------------|------------|
+| Control Plane | Open-source | Enterprise-ready (Red Hat) |
+| Security | Manual | Built-in |
+| Web UI | Minimal | Feature-rich |
+
+---
+
+## **20. Monitoring Tools: Nagios XI**
+- **Nagios XI** monitors CPU, RAM, Disk.
+- Works on **port 5666**.
+- Uses **SNMP, HTTP, HTTPS** protocols.
+
+---
+
+## **21. Log Rotation**
+Rotate logs for `httpd` service:
+```bash
+vim /etc/logrotate.d/httpd
+/var/log/httpd/*log {
+    weekly
+    rotate 4
+    compress
+    missingok
+}
+```
+
+---
+
+## **22. How to Restore `/etc/passwd` if Deleted**
+```bash
+cp /var/backups/passwd /etc/passwd
+```
+
+---
+
+## **23. Schedule a Cron Job (Runs at 1 AM Daily)**
+```bash
+crontab -e
+0 1 * * * /path/to/script.sh
+```
+
+---
+
+## **24. Passwordless SSH**
+### **Setup Steps**
+1. Generate SSH key:
+   ```bash
+   ssh-keygen -t rsa
+   ```
+2. Copy the key to the remote server:
+   ```bash
+   ssh-copy-id user@remote_host
+   ```
+3. Now, login without a password:
+   ```bash
+   ssh user@remote_host
+   ```
+
+---
+
+## **25. Kubernetes Probes**
+1. **Liveness Probe** – Restarts unhealthy containers.
+2. **Readiness Probe** – Checks if app is ready.
+3. **Startup Probe** – Ensures proper startup.
+
+```yaml
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 3
+  periodSeconds: 10
+```
+
+---
