@@ -1,0 +1,116 @@
+Here are detailed answers to your questions:  
+
+### **Ansible**  
+**30. What are Ansible facts?**  
+Ansible facts are system variables automatically collected from managed nodes. They provide details like OS, network interfaces, IP addresses, and more. They can be accessed using `ansible_facts` in playbooks.  
+👉 Command:  
+```sh
+ansible all -m setup
+```
+
+**31. When will you use the `when` condition in a playbook?**  
+The `when` condition is used to run a task based on specific criteria.  
+👉 Example:  
+```yaml
+- name: Install package only on CentOS
+  yum:
+    name: httpd
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+```
+
+**32. What is an ad-hoc command?**  
+Ansible ad-hoc commands allow you to perform one-time tasks without writing a playbook.  
+👉 Example:  
+```sh
+ansible all -m ping
+```
+
+**33. How to create a user and view the hostname using an ad-hoc command?**  
+```sh
+ansible all -m user -a "name=testuser state=present" && ansible all -m command -a "hostname"
+```
+
+### **Docker**  
+**34. What is a Dockerfile?**  
+A `Dockerfile` is a script that contains instructions to build a Docker image.  
+👉 Example:  
+```Dockerfile
+FROM ubuntu:latest
+RUN apt update && apt install -y nginx
+CMD ["nginx", "-g", "daemon off;"]
+```
+  
+### **Shell Scripting**  
+**35. How to use a for loop in a script?**  
+```sh
+for i in {1..5}
+do
+  echo "Iteration $i"
+done
+```
+
+### **Linux Commands**  
+**Set `/data/bin` path to the current path**  
+```sh
+export PATH=$PATH:/data/bin
+```
+To make it permanent, add it to `~/.bashrc` or `/etc/profile`.
+
+**Set SELinux to enforce mode**  
+```sh
+setenforce 1
+```
+
+**Check OS name**  
+```sh
+cat /etc/os-release
+```
+
+**Check directory size**  
+```sh
+du -sh /path/to/directory
+```
+
+### **Permissions**  
+**How to give file permissions?**  
+```sh
+chmod 755 file.txt
+```
+
+### **User Management**  
+**Add a user**  
+```sh
+useradd username
+passwd username
+```
+
+**View `/etc/passwd` fields**  
+The `/etc/passwd` file stores user details in this format:  
+```
+username:x:UID:GID:comment:home_directory:shell
+```
+
+### **Disk Management**  
+**View partitions**  
+```sh
+fdisk -l
+lsblk
+```
+
+**Print partition details**  
+```sh
+df -h
+```
+
+### **Logs Management**  
+**Check system logs**  
+```sh
+journalctl -xe
+```
+**View logs of a service (e.g., Nginx)**  
+```sh
+tail -f /var/log/nginx/access.log
+```
+
+Let me know if you need more details! 🚀
